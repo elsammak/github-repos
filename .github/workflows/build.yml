@@ -10,5 +10,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Retrieve and Print Token        
+      - name: Set up Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Retrieve and Use Token
+        run: |
+        echo "ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Build Xcode Project
+        run: xcodebuild -scheme YourAppScheme -configuration Release
 

@@ -31,7 +31,7 @@ extension APIClient {
             var request = URLRequest(url: url)
             
 
-            if let githubToken = ProcessInfo.processInfo.environment["ACCESS_TOKEN"] {
+            if let githubToken = ProcessInfo.processInfo.environment["GITHUB_TOKEN"] {
                 request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
             } else {
                 var chatError = ChatError()

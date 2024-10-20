@@ -1,0 +1,14 @@
+name: Simple Token Test
+
+on: [push]
+
+jobs:
+  token-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Retrieve and Print Token        
+

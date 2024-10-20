@@ -99,10 +99,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 791EA6E22CC4B870008D1E79 /* Build configuration list for PBXNativeTarget "GitHubRepo" */;
 			buildPhases = (
+				791EA7092CC50321008D1E79 /* Import Env File */,
 				791EA6BA2CC4B86F008D1E79 /* Sources */,
 				791EA6BB2CC4B86F008D1E79 /* Frameworks */,
 				791EA6BC2CC4B86F008D1E79 /* Resources */,
-				791EA7092CC50321008D1E79 /* Import Env File */,
 			);
 			buildRules = (
 			);
@@ -249,7 +249,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport $(grep -v '^#' .env | xargs)\n";
+			shellScript = "#!/usr/bin/env bash\n\n# Show env vars\ngrep -v '^#' .env\n\n# Export env vars\nexport $(grep -v '^#' .env | xargs)\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

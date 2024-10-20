@@ -22,4 +22,4 @@ jobs:
       - name: Build Xcode Project
         run: |
           cd GitHubRepo   # Ensure we're in the right directory
-          xcodebuild -scheme GitHubRepo
+          xcodebuild -scheme GitHubRepo -allowProvisioningUpdates

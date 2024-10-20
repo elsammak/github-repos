@@ -16,11 +16,6 @@ jobs:
       - name: Set ACCESS_TOKEN environment variable
         run: echo "ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }}" >> $GITHUB_ENV
 
-      - name: Debug: Echo ACCESS_TOKEN
-        run: echo "GitHub Token: $ACCESS_TOKEN"
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
       - name: Build Xcode Project
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

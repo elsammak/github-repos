@@ -1,4 +1,4 @@
-name: Simple Token Test
+name: Build File
 
 on: [push]
 
@@ -13,10 +13,15 @@ jobs:
       - name: Set up Xcode
         run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
-      - name: Retrieve and Use Token
-        run: |
-        echo "ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }}" >> $GITHUB_ENV
+      - name: Set ACCESS_TOKEN environment variable
+        run: echo "ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Debug: Echo ACCESS_TOKEN
+        run: echo "GitHub Token: $ACCESS_TOKEN"
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Build Xcode Project
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: xcodebuild -scheme YourAppScheme -configuration Release
-

@@ -17,9 +17,8 @@ jobs:
         run: echo "ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }}" >> $GITHUB_ENV
         
       - name: Change to Project Directory
-        working-directory: ./GitHubRepo
+        run: cd GitHubRepo # Set the working directory to the GitHubRepo folder
 
-        
       - name: Build Xcode Project
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

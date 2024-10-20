@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   token-job:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest # Change this to macOS
 
     steps:
       - name: Checkout code

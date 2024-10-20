@@ -15,7 +15,11 @@ jobs:
 
       - name: Set ACCESS_TOKEN environment variable
         run: echo "ACCESS_TOKEN=${{ secrets.ACCESS_TOKEN }}" >> $GITHUB_ENV
+        
+      - name: Change to Project Directory
+        working-directory: ./GitHubRepo
 
+        
       - name: Build Xcode Project
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

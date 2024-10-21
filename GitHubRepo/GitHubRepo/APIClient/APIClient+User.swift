@@ -51,7 +51,7 @@ extension APIClient {
 
                 let decoder = JSONDecoder()
                 let usersArray = try decoder.decode([UserJSON].self, from: data)
-
+                
                 var nextUrl: String?
                 if let httpResponse = response as? HTTPURLResponse, let str = httpResponse.allHeaderFields["Link"] as? String {
                     nextUrl = extractNextUrl(fromString: str)
@@ -81,7 +81,7 @@ extension APIClient {
                 let nextUrl = part[0]
                 if let start = nextUrl.firstIndex(of: "<"), let end = nextUrl.firstIndex(of: ">") {
                     let startIndex = nextUrl.index(after: start) // Move the index after "<"
-                    let endIndex = nextUrl.index(before: end) // Move the index before ">"
+                    let endIndex = nextUrl.index(after: end) // Move the index before ">"
                     return String(nextUrl[startIndex..<endIndex]) // Return the substring between "<" and ">"
                 }
 

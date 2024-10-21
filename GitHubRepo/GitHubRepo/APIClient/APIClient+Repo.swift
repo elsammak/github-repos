@@ -20,7 +20,7 @@ extension APIClient {
         if let urlStoredValue = nextUserUrl {
             urlString = urlStoredValue
         } else {
-            urlString = baseURL + "/users/\(userLogin)/repos"
+            urlString = baseURL + "/users/\(userLogin)/repos?type=sources"
         }
         
         guard let url = URL(string: urlString) else {
@@ -58,7 +58,12 @@ extension APIClient {
                 nextUrl = extractNextUrl(fromString: str)
             }
             
-            return .success((reposArray, nextUrl))
+            // Filter repositories to include only forks
+            // According to the documentation, we should add type=sources to get non-forked repos. But as this is not working as
+            // expected, I will filter here (ref: https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28)
+            let forkedRepos = reposArray.filter { $0.fork }
+            
+            return .success((forkedRepos, nextUrl))
         } catch {
             var chatError = ChatError()
             chatError.errorMessage = "USERS_PARSING_ERROR"

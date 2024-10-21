@@ -9,22 +9,24 @@ import SwiftUI
 
 struct UsersListView: View {
     
-    @ObservedObject var usersViewModel = UsersViewModel() 
-    
+    @ObservedObject var usersViewModel = UsersViewModel()
+
     var body: some View {
             List {
                 ForEach(Array(usersViewModel.users.enumerated()), id: \.offset) { index, user in
-                    HStack {
-                        AsyncImage(url: URL(string: user.avatar_url)) { image in
-                            image.resizable()
-                        } placeholder: {
-                            ProgressView()
+                    NavigationLink(destination: RepositoriesDetailsView(user: user)) {
+                        HStack {
+                            AsyncImage(url: URL(string: user.avatar_url)) { image in
+                                image.resizable()
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            
+                            Text(user.login)
+                                .font(.headline)
                         }
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                        
-                        Text(user.login)
-                            .font(.headline)
                     }
                     .onAppear {
                         // Trigger loading of next page if this is the last user

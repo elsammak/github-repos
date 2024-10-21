@@ -8,16 +8,12 @@
 /// The ViewModel to deal with User module. It acts as middle layer between User UI layer and User model layer.
 import Foundation
 
-class UsersViewModel: AbstractViewModel {
+final class UsersViewModel: AbstractViewModel {
     
     // Vars
     var nextUserUrl: String = ""
     @Published var users: [UserJSON] = []
      
-    //MARK:- Inits
-    override init() {
-        super.init()
-    }
 
     // MARK:- Remote APIs
     @MainActor

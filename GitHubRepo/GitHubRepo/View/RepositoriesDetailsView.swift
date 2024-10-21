@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct RepositoriesDetailsView: View {
+    
     var user: UserJSON
+    @ObservedObject var repositoryViewModel = RepositoriesViewModel()
+
     
     var body: some View {
         VStack {
@@ -25,10 +28,15 @@ struct RepositoriesDetailsView: View {
                 .padding()
         }
         .navigationTitle(user.login)
+        .onAppear() {
+            Task {
+                await repositoryViewModel.loadRepos(forUser: user.login)
+            }
+        }
     }
 }
 
 #Preview {
-    let mockUser = UserJSON(login: "MockUser", avatar_url: "https://example.com/avatar.png", id: 12345)
+    let mockUser = UserJSON(login: "mojombo", avatar_url: "https://avatars.githubusercontent.com/u/1?v=", id: 1)
     RepositoriesDetailsView(user: mockUser)
 }

@@ -41,7 +41,4 @@ final class UsersViewModel: AbstractViewModel {
         isLoading = false // Reset loading state
 
     }
-
-   
-    
 }

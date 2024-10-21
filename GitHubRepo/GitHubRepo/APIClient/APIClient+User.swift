@@ -89,4 +89,49 @@ extension APIClient {
         }
         return nil
     }
+    
+    func getUserDetails(ofUser user: UserJSON) async -> (Result<UserJSON, ChatError>) {
+        
+        let urlString = baseURL + "/users/\(user.login)"
+        
+        guard let url = URL(string: urlString) else {
+            var chatError = ChatError()
+            chatError.errorMessage = "INVALID_URL"
+            return .failure(chatError)
+        }
+
+        var request = URLRequest(url: url)
+        
+
+        if let githubToken = ProcessInfo.processInfo.environment["access_token"] {
+            request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            var chatError = ChatError()
+            chatError.errorMessage = "No GitHub token found"
+            return .failure(chatError)
+        }
+        
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                var chatError = ChatError()
+                chatError.errorMessage = "Invalid response"
+                return .failure(chatError)
+            }
+            
+
+            let decoder = JSONDecoder()
+            let updatedUser = try decoder.decode(UserJSON.self, from: data)
+
+
+            return .success(updatedUser)
+        } catch {
+            var chatError = ChatError()
+            chatError.errorMessage = "USERS_PARSING_ERROR"
+            return .failure(chatError)
+        }
+        
+    }
 }

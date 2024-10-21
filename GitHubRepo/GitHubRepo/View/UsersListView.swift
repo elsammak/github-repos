@@ -14,7 +14,7 @@ struct UsersListView: View {
     var body: some View {
             List {
                 ForEach(Array(usersViewModel.users.enumerated()), id: \.offset) { index, user in
-                    NavigationLink(destination: RepositoriesDetailsView(user: user)) {
+                    NavigationLink(destination: RepositoriesDetailsView(user: user, usersViewModel: usersViewModel)) {
                         HStack {
                             AsyncImage(url: URL(string: user.avatar_url)) { image in
                                 image.resizable()

@@ -11,7 +11,7 @@ struct RepositoriesDetailsView: View {
     
     var user: UserJSON
     @ObservedObject var repositoryViewModel = RepositoriesViewModel()
-
+    @ObservedObject var usersViewModel: UsersViewModel
     
     var body: some View {
         VStack {
@@ -26,17 +26,21 @@ struct RepositoriesDetailsView: View {
             Text(user.login)
                 .font(.largeTitle)
                 .padding()
+            Text(user.name ?? "--")
+                .font(.largeTitle)
+                .padding()
         }
         .navigationTitle(user.login)
         .onAppear() {
             Task {
+                await usersViewModel.getUserDetails(for: user)
                 await repositoryViewModel.loadRepos(forUser: user.login)
             }
         }
     }
 }
 
-#Preview {
-    let mockUser = UserJSON(login: "mojombo", avatar_url: "https://avatars.githubusercontent.com/u/1?v=", id: 1)
-    RepositoriesDetailsView(user: mockUser)
-}
+//#Preview {
+//    let mockUser = UserJSON(login: "mojombo", avatar_url: "https://avatars.githubusercontent.com/u/1?v=", id: 1)
+//    RepositoriesDetailsView(user: mockUser)
+//}

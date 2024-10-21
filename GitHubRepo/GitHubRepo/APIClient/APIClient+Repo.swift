@@ -12,11 +12,16 @@ extension APIClient {
      Fetch list of repo for user
      - Returns: RepoJson object or throws an error if failed.
      */
-    func getRepoList(ofUser userLogin: String) async -> (Result<[RepoJSON], ChatError>) {
+    func getRepoList(fromUrl nextUserUrl: String? = nil, ofUser userLogin: String) async -> (Result<([RepoJSON], String?), ChatError>) {
         
         // Create url request
-        var urlString = baseURL + "/users/\(userLogin)/repos"
         
+        var urlString: String!
+        if let urlStoredValue = nextUserUrl {
+            urlString = urlStoredValue
+        } else {
+            urlString = baseURL + "/users/\(userLogin)/repos"
+        }
         
         guard let url = URL(string: urlString) else {
             var chatError = ChatError()
@@ -48,8 +53,12 @@ extension APIClient {
             let decoder = JSONDecoder()
             let reposArray = try decoder.decode([RepoJSON].self, from: data)
             
+            var nextUrl: String?
+            if let httpResponse = response as? HTTPURLResponse, let str = httpResponse.allHeaderFields["Link"] as? String {
+                nextUrl = extractNextUrl(fromString: str)
+            }
             
-            return .success(reposArray)
+            return .success((reposArray, nextUrl))
         } catch {
             var chatError = ChatError()
             chatError.errorMessage = "USERS_PARSING_ERROR"

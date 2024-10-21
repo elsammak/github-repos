@@ -14,10 +14,9 @@ struct UserJSON: Codable, Identifiable, Hashable {
     let followers: Int?
     let following: Int?
     let name: String?
-    let repos_url: String
     
     enum CodingKeys: String, CodingKey {
-        case login, id, avatar_url, name, followers, following, repos_url
+        case login, id, avatar_url, name, followers, following
     }
     
     init(from decoder: Decoder) throws {
@@ -28,17 +27,15 @@ struct UserJSON: Codable, Identifiable, Hashable {
         name = try values.decodeIfPresent(String.self, forKey: .name)
         followers = try values.decodeIfPresent(Int.self, forKey: .followers)
         following = try values.decodeIfPresent(Int.self, forKey: .following)
-        repos_url = try values.decodeIfPresent(String.self, forKey: .repos_url)!
     }
     
     // Add an initializer for easy creation in previews
-    init(login: String = "", avatar_url: String = "", id: Int = 0, name: String = "", followers: Int = 0, following: Int = 0, repos_url: String = "") {
+    init(login: String = "", avatar_url: String = "", id: Int = 0, name: String = "", followers: Int = 0, following: Int = 0) {
         self.login = login
         self.avatar_url = avatar_url
         self.id = id
         self.name = name
         self.followers = followers
-        self.following = following
-        self.repos_url = repos_url
+        self.following = following        
     }
 }

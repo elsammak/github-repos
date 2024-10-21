@@ -11,13 +11,13 @@ import Foundation
 final class UsersViewModel: AbstractViewModel {
     
     // Vars
-    var nextUserUrl: String = ""
+    var nextUserUrl: String?
     @Published var users: [UserJSON] = []
      
 
     // MARK:- Remote APIs
     @MainActor
-    func loadUsers(nextUserUrl: String? = nil) async {
+    func loadUsers() async {
                 
         guard !isLoading else { return } // Prevent multiple API calls
         
@@ -29,10 +29,9 @@ final class UsersViewModel: AbstractViewModel {
         switch result {
         case .success(let (usersArray, nextUrl)):
             self.users.append(contentsOf: usersArray) // Append new users to the list
+            
             // Handle pagination
-            if let nextUrl = nextUrl {
-                await self.loadUsers(nextUserUrl: nextUrl)
-            }
+            self.nextUserUrl = nextUrl
             
         case .failure(let chatError):
             error = chatError
@@ -40,5 +39,28 @@ final class UsersViewModel: AbstractViewModel {
         
         isLoading = false // Reset loading state
 
+    }
+    
+    @MainActor
+    func getUserDetails(for user: UserJSON) async {
+        
+        guard !isLoading else { return } // Prevent multiple API calls
+        
+        isLoading = true
+        error = nil
+        
+        let result = await apiClient.getUserDetails(ofUser: user)
+        
+        switch result {
+        case .success(let userDetails):
+            if let index = users.firstIndex(where: { $0.id == userDetails.id }) {
+                users[index] = userDetails
+            }
+        case .failure(let chatError):
+            error = chatError
+        }
+        
+        isLoading = false // Reset loading state
+        
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 final class RepositoriesViewModel: AbstractViewModel {
     
     // Vars
-    
+    var nextUserUrl: String?
     @Published var user: UserJSON!
     @Published var reposArray: [RepoJSON] = []
      
@@ -24,11 +24,14 @@ final class RepositoriesViewModel: AbstractViewModel {
         isLoading = true
         error = nil
         
-        let result = await apiClient.getRepoList(ofUser: login)
+        let result = await apiClient.getRepoList(fromUrl: nextUserUrl, ofUser: login)
         
         switch result {
-        case .success(let reposArray):
-            self.reposArray = reposArray            
+        case .success(let (reposArray, nextUrl)):
+            self.reposArray.append(contentsOf: reposArray) // Append new repos to the list
+            
+            // Handle pagination
+            self.nextUserUrl = nextUrl
             
         case .failure(let chatError):
             error = chatError

@@ -11,12 +11,12 @@ import Foundation
 class AbstractViewModel: ObservableObject {
 
     // Vars
-    var apiClient: APIClient!
+    var apiClient: APIClientProtocol
     @Published var error: ChatError?
     @Published var isLoading: Bool = false
     
     //MARK:- Inits
-    init() {
-        apiClient = APIClient()
+    init(apiClient: APIClientProtocol = APIClient()) {
+        self.apiClient = apiClient
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class APIClient {
+class APIClient: APIClientProtocol {
     
     var baseURL: String = ""
     let session: URLSession!

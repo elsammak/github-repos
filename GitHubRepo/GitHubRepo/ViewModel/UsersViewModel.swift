@@ -14,7 +14,10 @@ final class UsersViewModel: AbstractViewModel {
     var nextUserUrl: String?
     @Published var users: [UserJSON] = []
      
-
+    override init(apiClient: APIClientProtocol = APIClient()) {
+        super.init(apiClient: apiClient)
+    }
+    
     // MARK:- Remote APIs
     @MainActor
     func loadUsers() async {

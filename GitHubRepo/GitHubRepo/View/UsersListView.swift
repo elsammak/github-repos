@@ -48,7 +48,7 @@ struct UsersListView: View {
                 await usersViewModel.loadUsers() // Load initial page
             }
         }
-        .onChange(of: usersViewModel.error ?? ChatError()) { _,error in
+        .onChange(of: usersViewModel.error ?? AppError()) { _,error in
             if error.errorMessage != nil {
                 self.presentAlert = (error.errorMessage != nil)
             }

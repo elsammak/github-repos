@@ -78,7 +78,7 @@ struct RepositoriesDetailsView: View {
                 await repositoryViewModel.loadRepos(forUser: user.login)
             }
         }
-        .onChange(of: usersViewModel.error ?? ChatError()) { _,error in
+        .onChange(of: usersViewModel.error ?? AppError()) { _,error in
             if error.errorMessage != nil {
                 self.presentAlert = (error.errorMessage != nil)
             }

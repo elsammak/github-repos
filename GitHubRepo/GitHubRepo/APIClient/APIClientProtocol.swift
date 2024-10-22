@@ -6,7 +6,7 @@
 //
 
 protocol APIClientProtocol {
-    func getUsers(fromUrl nextUserUrl: String?) async -> Result<([UserJSON], String?), ChatError>
-    func getUserDetails(ofUser user: UserJSON) async -> (Result<UserJSON, ChatError>)
-    func getRepoList(fromUrl nextUserUrl: String?, ofUser userLogin: String) async -> (Result<([RepoJSON], String?), ChatError>)
+    func getUsers(fromUrl nextUserUrl: String?) async -> Result<([UserJSON], String?), AppError>
+    func getUserDetails(ofUser user: UserJSON) async -> (Result<UserJSON, AppError>)
+    func getRepoList(fromUrl nextUserUrl: String?, ofUser userLogin: String) async -> (Result<([RepoJSON], String?), AppError>)
 }

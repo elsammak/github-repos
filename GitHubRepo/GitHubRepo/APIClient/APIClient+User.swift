@@ -13,7 +13,7 @@ extension APIClient {
      With every response the next request url is included inside the header and should be used for the next request.
      - Returns: UserJson object and next request URL if succeeded, or throws an error if failed.
      */
-    func getUsers(fromUrl nextUserUrl: String? = nil) async -> (Result<([UserJSON], String?), ChatError>) {
+    func getUsers(fromUrl nextUserUrl: String? = nil) async -> (Result<([UserJSON], String?), AppError>) {
         
             // Create url request
         var urlString: String!
@@ -24,9 +24,9 @@ extension APIClient {
         }
 
         guard let url = URL(string: urlString) else {
-            var chatError = ChatError()
-            chatError.errorMessage = "INVALID_URL"
-            return .failure(chatError)
+            var appError = AppError()
+            appError.errorMessage = "INVALID_URL"
+            return .failure(appError)
         }
 
         var request = URLRequest(url: url)
@@ -35,18 +35,18 @@ extension APIClient {
         if let githubToken = getAccessToken() {
             request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
         } else {
-            var chatError = ChatError()
-            chatError.errorMessage = "No GitHub token found"
-            return .failure(chatError)
-        }                
+            var appError = AppError()
+            appError.errorMessage = "No GitHub token found"
+            return .failure(appError)
+        }
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             
             guard let _ = response as? HTTPURLResponse else {
-                var chatError = ChatError()
-                chatError.errorMessage = "Invalid response"
-                return .failure(chatError)
+                var appError = AppError()
+                appError.errorMessage = "Invalid response"
+                return .failure(appError)
             }
             
 
@@ -60,9 +60,9 @@ extension APIClient {
 
             return .success((usersArray, nextUrl))
         } catch {
-            var chatError = ChatError()
-            chatError.errorMessage = "USERS_PARSING_ERROR"
-            return .failure(chatError)
+            var appError = AppError()
+            appError.errorMessage = "USERS_PARSING_ERROR"
+            return .failure(appError)
         }
     }
     
@@ -91,14 +91,14 @@ extension APIClient {
         return nil
     }
     
-    func getUserDetails(ofUser user: UserJSON) async -> (Result<UserJSON, ChatError>) {
+    func getUserDetails(ofUser user: UserJSON) async -> (Result<UserJSON, AppError>) {
         
         let urlString = baseURL + "/users/\(user.login)"
         
         guard let url = URL(string: urlString) else {
-            var chatError = ChatError()
-            chatError.errorMessage = "INVALID_URL"
-            return .failure(chatError)
+            var appError = AppError()
+            appError.errorMessage = "INVALID_URL"
+            return .failure(appError)
         }
 
         var request = URLRequest(url: url)
@@ -107,19 +107,19 @@ extension APIClient {
         if let githubToken = getAccessToken() {
             request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
         } else {
-            var chatError = ChatError()
-            chatError.errorMessage = "No GitHub token found"
-            return .failure(chatError)
+            var appError = AppError()
+            appError.errorMessage = "No GitHub token found"
+            return .failure(appError)
         }
         
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             
-            guard let httpResponse = response as? HTTPURLResponse else {
-                var chatError = ChatError()
-                chatError.errorMessage = "Invalid response"
-                return .failure(chatError)
+            guard let _ = response as? HTTPURLResponse else {
+                var appError = AppError()
+                appError.errorMessage = "Invalid response"
+                return .failure(appError)
             }
             
 
@@ -129,9 +129,9 @@ extension APIClient {
 
             return .success(updatedUser)
         } catch {
-            var chatError = ChatError()
-            chatError.errorMessage = "USERS_PARSING_ERROR"
-            return .failure(chatError)
+            var appError = AppError()
+            appError.errorMessage = "USERS_PARSING_ERROR"
+            return .failure(appError)
         }
         
     }

@@ -12,7 +12,7 @@ class AbstractViewModel: ObservableObject {
 
     // Vars
     var apiClient: APIClientProtocol
-    @Published var error: ChatError?
+    @Published var error: AppError?
     @Published var isLoading: Bool = false
             
     

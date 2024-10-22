@@ -6,8 +6,11 @@
 //
 
 /// API server configurations
+
+import Foundation
 struct APIEndPoint {
     static let hostUrl = "https://api.github.com"
+    static let cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalCacheData
 }
 
 // Localization is not implemented, but I added all UI text in a struct here.
@@ -28,6 +31,9 @@ struct UILabelString {
     static let cancelTitle: String = "Cancel"
     static let errorTitle: String = "Error"
     static let noconnectionTitle: String = "No Internet Connection!"
+    static let invalidURLTitle: String = "Invalid URL!"
+    static let invalidTokenTitle: String = "Invalid Token!"
+    static let invalidResponseTitle: String = "Invalid Response!"  
     static let defaultErrorMessage: String = "Unknown Error!"
     
 }

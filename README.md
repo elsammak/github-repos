@@ -2,16 +2,13 @@
 
 ## Table of Contents
 1. [Demo](#Demo)
-3. [Project Overview](#Project-Overview)
-4. [Key Features](#Key-Features)
-5. [Project Structure](#Project-Structure)
-6. [Clean Architecture Breakdown](#Clean-Architecture-Breakdown)
-7. [Clean Architecture Benefits](#Clean-Architecture-Benefits)
-8. [Test Cases](#Test-Cases) 
-9. [Error Handling](#Error-Handling)
-10. [UML Diagram](#UML-Diagram)
-11. [Memory Check](#Memory-Check) 
-12. [Future Work](#Future-Work)
+2. [Project Overview](#Project-Overview)
+3. [API](#API)
+4. [Directory Structure](#Directory-Structure)
+5. [Test Cases](#Test-Cases) 
+6. [Error Handling](#Error-Handling)
+7. [UML Diagram](#UML-Diagram)
+8. [Memory Check](#Memory-Check) 
 
 
 ### Demo
@@ -22,7 +19,11 @@
 This project is an iOS application built using **SwiftUI**, adhering to **MVVM Architecture** principles. The project follows a structured approach to ensure that the codebase is scalable, testable, and maintainable.
 I didn't use any model to store the data so all data will be retreived online.
 
-#### Directory Structure:
+### API:
+I'm using GitHub API token to get users ans associated repositories. Adding the access token to the CI/CD and add actions to GitHub to retreive the token stored there is the most secured way but it needs a provision profile and certificate.
+Instead, I used Xcode Environment Variables and pushed it to github, I used keychain to store and retreive this token when working in read device. 
+
+### Directory Structure:
 ![Project Structure](/Resources/xcode-structure.png)
 
 This project follows **MVVM Architecture**, which divides the codebase into clear layers:

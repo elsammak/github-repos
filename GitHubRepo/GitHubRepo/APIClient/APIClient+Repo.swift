@@ -24,30 +24,24 @@ extension APIClient {
         }
         
         guard let url = URL(string: urlString) else {
-            var appError = AppError()
-            appError.errorMessage = "INVALID_URL"
-            return .failure(appError)
+            return .failure(.invalidURL)
         }
         
         var request = URLRequest(url: url)
-        
+        request.cachePolicy = APIEndPoint.cachePolicy
         
         
         if let githubToken = getAccessToken() {
             request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
         } else {
-            var appError = AppError()
-            appError.errorMessage = "No GitHub token found"
-            return .failure(appError)
+            return .failure(.invalidToken)
         }
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             
             guard let _ = response as? HTTPURLResponse else {
-                var appError = AppError()
-                appError.errorMessage = "Invalid response"
-                return .failure(appError)
+                return .failure(.invalidResponse)
             }
             
             
@@ -65,10 +59,8 @@ extension APIClient {
             let forkedRepos = reposArray.filter { $0.fork }
             
             return .success((forkedRepos, nextUrl))
-        } catch {
-            var appError = AppError()
-            appError.errorMessage = "USERS_PARSING_ERROR"
-            return .failure(appError)
+        } catch (let error) {
+            return .failure(.unknownError(error.localizedDescription))
         }
     }
 }

@@ -48,12 +48,10 @@ struct UsersListView: View {
                 await usersViewModel.loadUsers() // Load initial page
             }
         }
-        .onChange(of: usersViewModel.error ?? AppError()) { _,error in
-            if error.errorMessage != nil {
-                self.presentAlert = (error.errorMessage != nil)
-            }
+        .onChange(of: usersViewModel.error) { _ ,error in
+            self.presentAlert = (usersViewModel.error?.errorDescription != nil)
         }
-        .showAlert(isPresented: $presentAlert, title: UILabelString.errorTitle, message: usersViewModel.error?.errorMessage ?? UILabelString.defaultErrorMessage)
+        .showAlert(isPresented: $presentAlert, title: UILabelString.errorTitle, message: usersViewModel.error?.errorDescription ?? UILabelString.defaultErrorMessage)
     }
 }
 

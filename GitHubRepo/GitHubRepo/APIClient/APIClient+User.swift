@@ -24,29 +24,23 @@ extension APIClient {
         }
 
         guard let url = URL(string: urlString) else {
-            var appError = AppError()
-            appError.errorMessage = "INVALID_URL"
-            return .failure(appError)
+            return .failure(.invalidURL)
         }
 
         var request = URLRequest(url: url)
-                        
+        request.cachePolicy = APIEndPoint.cachePolicy
             
         if let githubToken = getAccessToken() {
             request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
         } else {
-            var appError = AppError()
-            appError.errorMessage = "No GitHub token found"
-            return .failure(appError)
+            return .failure(.invalidToken)
         }
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             
-            guard let _ = response as? HTTPURLResponse else {
-                var appError = AppError()
-                appError.errorMessage = "Invalid response"
-                return .failure(appError)
+            guard let _ = response as? HTTPURLResponse else {      
+                return .failure(.invalidResponse)
             }
             
 
@@ -59,10 +53,8 @@ extension APIClient {
             }
 
             return .success((usersArray, nextUrl))
-        } catch {
-            var appError = AppError()
-            appError.errorMessage = "USERS_PARSING_ERROR"
-            return .failure(appError)
+        } catch (let error) {
+            return .failure(.unknownError(error.localizedDescription))
         }
     }
     
@@ -96,20 +88,16 @@ extension APIClient {
         let urlString = baseURL + "/users/\(user.login)"
         
         guard let url = URL(string: urlString) else {
-            var appError = AppError()
-            appError.errorMessage = "INVALID_URL"
-            return .failure(appError)
+            return .failure(.invalidURL)
         }
 
         var request = URLRequest(url: url)
-        
+        request.cachePolicy = APIEndPoint.cachePolicy
 
         if let githubToken = getAccessToken() {
             request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
         } else {
-            var appError = AppError()
-            appError.errorMessage = "No GitHub token found"
-            return .failure(appError)
+            return .failure(.invalidToken)
         }
         
         
@@ -117,9 +105,7 @@ extension APIClient {
             let (data, response) = try await URLSession.shared.data(for: request)
             
             guard let _ = response as? HTTPURLResponse else {
-                var appError = AppError()
-                appError.errorMessage = "Invalid response"
-                return .failure(appError)
+                return .failure(.invalidResponse)
             }
             
 
@@ -128,10 +114,8 @@ extension APIClient {
 
 
             return .success(updatedUser)
-        } catch {
-            var appError = AppError()
-            appError.errorMessage = "USERS_PARSING_ERROR"
-            return .failure(appError)
+        } catch (let error) {
+            return .failure(.unknownError(error.localizedDescription))
         }
         
     }

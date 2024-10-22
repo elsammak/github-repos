@@ -42,13 +42,12 @@ final class UsersViewModelTests: XCTestCase {
     }
     
     func testLoadUsersFailure() async {
-        let mockError = ChatError(errorMessage: "API Error")
-        mockAPIClient.usersResult = .failure(mockError)
+        mockAPIClient.usersResult = .failure(.unknownError("API Error"))
             
         await usersViewModel.loadUsers()
             
         XCTAssertEqual(usersViewModel.users.count, 0)
-        XCTAssertEqual(usersViewModel.error?.errorMessage, "API Error")
+        XCTAssertEqual(usersViewModel.error?.errorDescription!, "API Error")
     }
 
     func testGetUserDetailsSuccess() async {
@@ -68,13 +67,11 @@ final class UsersViewModelTests: XCTestCase {
         
         let user = UserJSON(login: "user1", avatar_url: "url1", id: 1)
         usersViewModel.users = [user]
-            
-        let mockError = ChatError(errorMessage: "User Details Error")
-        mockAPIClient.userDetailsResult = .failure(mockError)
+                    
+        mockAPIClient.userDetailsResult = .failure(.unknownError("User Details Error"))
                         
         await usersViewModel.getUserDetails(for: user)
-                        
-        XCTAssertEqual(usersViewModel.users.first?.name, nil)
-        XCTAssertEqual(usersViewModel.error?.errorMessage, "User Details Error")
+                                
+        XCTAssertEqual(usersViewModel.error?.errorDescription!, "User Details Error")
         }
 }

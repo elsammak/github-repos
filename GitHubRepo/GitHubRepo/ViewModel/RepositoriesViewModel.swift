@@ -33,8 +33,8 @@ final class RepositoriesViewModel: AbstractViewModel {
             // Handle pagination
             self.nextUserUrl = nextUrl
             
-        case .failure(let chatError):
-            error = chatError
+        case .failure(let appError):
+            error = appError
         }
         
         isLoading = false // Reset loading state

@@ -7,19 +7,11 @@
 
 /// Main error object used for this app, all errors form server or code should be mapped to this error.
 import Foundation
-struct AppError: Error, Equatable {
-    
-    var errorCode: Int = 0
-    var errorMessage: String!
-    
-    static func == (lhs: AppError, rhs: AppError) -> Bool {
-        return lhs.errorCode == rhs.errorCode && lhs.errorMessage == rhs.errorMessage
-    }
-    
-}
-
-enum GitHubRepoError: LocalizedError {
+enum AppError: LocalizedError {
     case noInternet
+    case invalidURL
+    case invalidToken
+    case invalidResponse
     case serverUnreachable(String)
     case unknownError(String)
     
@@ -30,8 +22,16 @@ enum GitHubRepoError: LocalizedError {
             return UILabelString.noconnectionTitle
         case .serverUnreachable(let message):
             return message
+        case .invalidURL:
+            return UILabelString.invalidURLTitle
+        case .invalidToken:
+            return UILabelString.invalidTokenTitle
+        case .invalidResponse:
+            return UILabelString.invalidResponseTitle
         case .unknownError(let message):
-            return UILabelString.defaultErrorMessage + ": \(message)"
+            return message
         }
     }
 }
+
+extension AppError: Equatable {}

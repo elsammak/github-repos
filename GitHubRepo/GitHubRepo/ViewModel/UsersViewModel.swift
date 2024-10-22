@@ -32,8 +32,8 @@ final class UsersViewModel: AbstractViewModel {
             // Handle pagination
             self.nextUserUrl = nextUrl
             
-        case .failure(let chatError):            
-            error = chatError
+        case .failure(let appError):
+            error = appError
         }
         
         isLoading = false // Reset loading state
@@ -55,8 +55,8 @@ final class UsersViewModel: AbstractViewModel {
             if let index = users.firstIndex(where: { $0.id == userDetails.id }) {
                 users[index] = userDetails
             }
-        case .failure(let chatError):
-            error = chatError
+        case .failure(let appError):
+            error = appError
         }
         
         isLoading = false // Reset loading state

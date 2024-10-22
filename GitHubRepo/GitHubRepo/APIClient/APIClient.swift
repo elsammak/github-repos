@@ -17,9 +17,10 @@ class APIClient: APIClientProtocol {
         baseURL = APIEndPoint.hostUrl
         session = URLSession.shared
     }
-    
+
+    /// Save token to keychain to access from device not xcode
+    /// This is better to be handled via CI/CD, but it needs to have an app provision certificates to I used Environment instead
     func getAccessToken() -> String? {
-        /// Save token to keychain to access from device not xcode
         if let githubToken = ProcessInfo.processInfo.environment["access_token"] {
             saveToKeychain(token: githubToken)
             return githubToken
@@ -28,5 +29,19 @@ class APIClient: APIClientProtocol {
         } else {
             return nil
         }
+    }
+    
+    
+    // Convert the network error to an AppError
+    func handleNetworkError(_ error: Error) -> AppError {
+        
+        // Check if the error is an Apollo URLSessionClient error
+//        if let apolloError = error as? Apollo.URLSessionClient.URLSessionClientError {
+//            return .serverUnreachable(apolloError.localizedDescription) // Apollo wraps mamy types of errors, we can do mapping later here
+//        } else if (error as NSError).domain == NSURLErrorDomain {
+//            return .noInternet
+//        }
+            // Fallback for other types of errors
+           return .unknownError(error.localizedDescription)
     }
 }

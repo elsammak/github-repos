@@ -17,3 +17,21 @@ struct AppError: Error, Equatable {
     }
     
 }
+
+enum GitHubRepoError: LocalizedError {
+    case noInternet
+    case serverUnreachable(String)
+    case unknownError(String)
+    
+    var errorDescription: String? {
+        switch self {
+            
+        case .noInternet:
+            return UILabelString.noconnectionTitle
+        case .serverUnreachable(let message):
+            return message
+        case .unknownError(let message):
+            return UILabelString.defaultErrorMessage + ": \(message)"
+        }
+    }
+}

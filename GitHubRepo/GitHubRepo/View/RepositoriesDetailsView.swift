@@ -26,16 +26,16 @@ struct RepositoriesDetailsView: View {
                 .clipShape(Circle())
             }
             
-            Text("Username: \(user.login)")
-            Text("Full Name:\(user.name ?? "--")")
-            Text("Number of Followers:\(user.followers ?? 0)")
-            Text("Number of Following:\(user.following ?? 0)")
+            Text("\(UILabelString.userNameTitle):   \(user.login)")
+            Text("\(UILabelString.fullNameTitle):  \(user.name ?? "--")")
+            Text("\(UILabelString.followersTitle) : \(user.followers ?? 0)")
+            Text("\(UILabelString.followingTitle) : \(user.following ?? 0)")
             Spacer()
             
-            Text("List of Repositories")
+            Text(UILabelString.reposListTitle)
             .font(.headline)
             
-            Text("Count of repo \(repositoryViewModel.reposArray.count)")
+            Text("\(UILabelString.displayedReposCount):  \(repositoryViewModel.reposArray.count)")
             
             // List of repos
             List {
@@ -46,7 +46,7 @@ struct RepositoriesDetailsView: View {
                             .font(.subheadline)
                         Text(repo.language ?? "--")
                             .font(.subheadline)
-                        Text("Stars: \(repo.stargazers_count)")
+                        Text("\(UILabelString.starsTitle): \(repo.stargazers_count)")
                             .font(.footnote)
                             .foregroundColor(.gray)
                         Text(repo.description ?? "--")
@@ -83,7 +83,7 @@ struct RepositoriesDetailsView: View {
                 self.presentAlert = (error.errorMessage != nil)
             }
         }
-        .showAlert(isPresented: $presentAlert, title: "Error", message: usersViewModel.error?.errorMessage ?? "Unknown Error")
+        .showAlert(isPresented: $presentAlert, title: UILabelString.errorTitle, message: usersViewModel.error?.errorMessage ?? UILabelString.defaultErrorMessage)
     }
 }
 

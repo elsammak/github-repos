@@ -53,7 +53,7 @@ struct UsersListView: View {
                 self.presentAlert = (error.errorMessage != nil)
             }
         }
-        .showAlert(isPresented: $presentAlert, title: "Error", message: usersViewModel.error?.errorMessage ?? "Unknown Error")
+        .showAlert(isPresented: $presentAlert, title: UILabelString.errorTitle, message: usersViewModel.error?.errorMessage ?? UILabelString.defaultErrorMessage)
     }
 }
 

@@ -17,14 +17,14 @@ final class UsersViewModel: AbstractViewModel {
     // MARK:- Remote APIs
     @MainActor
     func loadUsers() async {
-                
+
         guard !isLoading else { return } // Prevent multiple API calls
         
         isLoading = true
         error = nil
         
         let result = await apiClient.getUsers(fromUrl: nextUserUrl)
-        
+                
         switch result {
         case .success(let (usersArray, nextUrl)):
             self.users.append(contentsOf: usersArray) // Append new users to the list
@@ -32,7 +32,7 @@ final class UsersViewModel: AbstractViewModel {
             // Handle pagination
             self.nextUserUrl = nextUrl
             
-        case .failure(let chatError):
+        case .failure(let chatError):            
             error = chatError
         }
         

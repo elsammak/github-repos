@@ -17,4 +17,16 @@ class APIClient: APIClientProtocol {
         baseURL = APIEndPoint.hostUrl
         session = URLSession.shared
     }
+    
+    func getAccessToken() -> String? {
+        /// Save token to keychain to access from device not xcode
+        if let githubToken = ProcessInfo.processInfo.environment["access_token"] {
+            saveToKeychain(token: githubToken)
+            return githubToken
+        } else if let githubToken = getTokenFromKeychain() {
+            return githubToken
+        } else {
+            return nil
+        }
+    }
 }

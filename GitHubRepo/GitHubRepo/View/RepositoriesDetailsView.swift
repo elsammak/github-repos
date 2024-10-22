@@ -68,8 +68,7 @@ struct RepositoriesDetailsView: View {
                     ProgressView() // Show loading indicator
                 }
             }
-            
-            // end of list
+            .accessibilityIdentifier("ReposList")
             
         }
         .navigationTitle(user.login)
@@ -79,9 +78,9 @@ struct RepositoriesDetailsView: View {
                 await repositoryViewModel.loadRepos(forUser: user.login)
             }
         }
-        .onChange(of: usersViewModel.error?.errorMessage) { _,errorMessage in
-            if errorMessage != nil {
-                self.presentAlert = (errorMessage == nil)
+        .onChange(of: usersViewModel.error ?? ChatError()) { _,error in
+            if error.errorMessage != nil {
+                self.presentAlert = (error.errorMessage != nil)
             }
         }
         .showAlert(isPresented: $presentAlert, title: "Error", message: usersViewModel.error?.errorMessage ?? "Unknown Error")

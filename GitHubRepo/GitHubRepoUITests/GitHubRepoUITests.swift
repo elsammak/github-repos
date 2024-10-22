@@ -28,15 +28,24 @@ final class GitHubRepoUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        // Verify that users list is loaded
-//        XCTAssertTrue(app.tables.element.exists, "The user list should be present")
+        let usersListFirst = app.cells.firstMatch
+        XCTAssertTrue(usersListFirst.waitForExistence(timeout: 5), "Expected at least one user to be displayed.")
+        
+        usersListFirst.tap()
+        
+        print(app.debugDescription)
 
-        // Tap on the first user
-//        let firstUserCell = app.tables.element(boundBy: 0).cells.element(boundBy: 0)
-//        XCTAssertTrue(firstUserCell.exists, "The first user cell should exist")
-//        firstUserCell.tap()
-//
-//        // After tapping, verify that the repositories view is shown
-//        XCTAssertTrue(app.staticTexts["List of Repositories"].exists, "The repository list should be visible")
+        
+        let reposList = app.collectionViews["ReposList"] // Access the list
+        
+        // Assert the list exists
+        
+        XCTAssertTrue(reposList.waitForExistence(timeout: 3), "The Repos List should be displayed.")
+                
+        
+        // Check that it has some cells
+        XCTAssertGreaterThan(reposList.cells.count, 0, "The list should contain some users")
+        
+        
     }
 }

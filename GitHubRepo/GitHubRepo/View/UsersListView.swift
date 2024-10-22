@@ -43,14 +43,14 @@ struct UsersListView: View {
                 ProgressView() // Show loading indicator
             }
         }
-        .onAppear {
+        .onAppear {            
             Task {
                 await usersViewModel.loadUsers() // Load initial page
             }
         }
-        .onChange(of: usersViewModel.error?.errorMessage) { _,errorMessage in
-            if errorMessage != nil {
-                self.presentAlert = (errorMessage == nil)
+        .onChange(of: usersViewModel.error ?? ChatError()) { _,error in
+            if error.errorMessage != nil {
+                self.presentAlert = (error.errorMessage != nil)
             }
         }
         .showAlert(isPresented: $presentAlert, title: "Error", message: usersViewModel.error?.errorMessage ?? "Unknown Error")

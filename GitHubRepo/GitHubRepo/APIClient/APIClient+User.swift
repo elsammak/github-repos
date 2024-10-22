@@ -14,56 +14,57 @@ extension APIClient {
      - Returns: UserJson object and next request URL if succeeded, or throws an error if failed.
      */
     func getUsers(fromUrl nextUserUrl: String? = nil) async -> (Result<([UserJSON], String?), ChatError>) {
+        
             // Create url request
-            var urlString: String!
-            if let urlStoredValue = nextUserUrl {
-                urlString = urlStoredValue
-            } else {
-                urlString = baseURL + "/users?"
-            }
+        var urlString: String!
+        if let urlStoredValue = nextUserUrl {
+            urlString = urlStoredValue
+        } else {
+            urlString = baseURL + "/users?"
+        }
 
-            guard let url = URL(string: urlString) else {
+        guard let url = URL(string: urlString) else {
+            var chatError = ChatError()
+            chatError.errorMessage = "INVALID_URL"
+            return .failure(chatError)
+        }
+
+        var request = URLRequest(url: url)
+                        
+            
+        if let githubToken = getAccessToken() {
+            request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            var chatError = ChatError()
+            chatError.errorMessage = "No GitHub token found"
+            return .failure(chatError)
+        }                
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let _ = response as? HTTPURLResponse else {
                 var chatError = ChatError()
-                chatError.errorMessage = "INVALID_URL"
+                chatError.errorMessage = "Invalid response"
                 return .failure(chatError)
             }
-
-            var request = URLRequest(url: url)
             
 
-            if let githubToken = ProcessInfo.processInfo.environment["access_token"] {
-                request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
-            } else {
-                var chatError = ChatError()
-                chatError.errorMessage = "No GitHub token found"
-                return .failure(chatError)
+            let decoder = JSONDecoder()
+            let usersArray = try decoder.decode([UserJSON].self, from: data)
+            
+            var nextUrl: String?
+            if let httpResponse = response as? HTTPURLResponse, let str = httpResponse.allHeaderFields["Link"] as? String {
+                nextUrl = extractNextUrl(fromString: str)
             }
-        
-            do {
-                let (data, response) = try await URLSession.shared.data(for: request)
-                
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    var chatError = ChatError()
-                    chatError.errorMessage = "Invalid response"
-                    return .failure(chatError)
-                }
-                
 
-                let decoder = JSONDecoder()
-                let usersArray = try decoder.decode([UserJSON].self, from: data)
-                
-                var nextUrl: String?
-                if let httpResponse = response as? HTTPURLResponse, let str = httpResponse.allHeaderFields["Link"] as? String {
-                    nextUrl = extractNextUrl(fromString: str)
-                }
-
-                return .success((usersArray, nextUrl))
-            } catch {
-                var chatError = ChatError()
-                chatError.errorMessage = "USERS_PARSING_ERROR"
-                return .failure(chatError)
-            }
+            return .success((usersArray, nextUrl))
+        } catch {
+            var chatError = ChatError()
+            chatError.errorMessage = "USERS_PARSING_ERROR"
+            return .failure(chatError)
         }
+    }
     
 
     /**
@@ -103,7 +104,7 @@ extension APIClient {
         var request = URLRequest(url: url)
         
 
-        if let githubToken = ProcessInfo.processInfo.environment["access_token"] {
+        if let githubToken = getAccessToken() {
             request.setValue("token \(githubToken)", forHTTPHeaderField: "Authorization")
         } else {
             var chatError = ChatError()

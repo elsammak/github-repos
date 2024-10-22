@@ -11,6 +11,7 @@ class APIClient: APIClientProtocol {
     
     var baseURL: String = ""
     let session: URLSession!
+    static let shared = APIClient() // Shared instance
     
     init() {
         baseURL = APIEndPoint.hostUrl

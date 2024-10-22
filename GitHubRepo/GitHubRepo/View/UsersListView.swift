@@ -10,44 +10,51 @@ import SwiftUI
 struct UsersListView: View {
     
     @ObservedObject var usersViewModel = UsersViewModel()
+    @State private var presentAlert = false
 
     var body: some View {
-            List {
-                ForEach(Array(usersViewModel.users.enumerated()), id: \.offset) { index, user in
-                    NavigationLink(destination: RepositoriesDetailsView(user: user, usersViewModel: usersViewModel)) {
-                        HStack {
-                            AsyncImage(url: URL(string: user.avatar_url)) { image in
-                                image.resizable()
-                            } placeholder: {
-                                ProgressView()
-                            }
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
+        List {
+            ForEach(Array(usersViewModel.users.enumerated()), id: \.offset) { index, user in
+                NavigationLink(destination: RepositoriesDetailsView(user: user, usersViewModel: usersViewModel)) {
+                    HStack {
+                        AsyncImage(url: URL(string: user.avatar_url)) { image in
+                            image.resizable()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
                             
-                            Text(user.login)
-                                .font(.headline)
-                        }
-                    }
-                    .onAppear {
-                        // Trigger loading of next page if this is the last user
-                        if index == usersViewModel.users.count - 1 {
-                            Task {
-                                await usersViewModel.loadUsers() // Load rest page
-                            }
-                        }
+                        Text(user.login)
+                            .font(.headline)
                     }
                 }
-                
-                if usersViewModel.isLoading {
-                    ProgressView() // Show loading indicator
+                .onAppear {
+                    // Trigger loading of next page if this is the last user
+                    if index == usersViewModel.users.count - 1 {
+                        Task {
+                            await usersViewModel.loadUsers() // Load rest page
+                        }
+                    }
                 }
             }
-            .onAppear {
-                Task {
-                    await usersViewModel.loadUsers() // Load initial page
-                }
+                
+            if usersViewModel.isLoading {
+                ProgressView() // Show loading indicator
             }
         }
+        .onAppear {
+            Task {
+                await usersViewModel.loadUsers() // Load initial page
+            }
+        }
+        .onChange(of: usersViewModel.error?.errorMessage) { _,errorMessage in
+            if errorMessage != nil {
+                self.presentAlert = (errorMessage == nil)
+            }
+        }
+        .showAlert(isPresented: $presentAlert, title: "Error", message: usersViewModel.error?.errorMessage ?? "Unknown Error")
+    }
 }
 
 

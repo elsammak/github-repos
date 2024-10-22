@@ -14,9 +14,10 @@ class AbstractViewModel: ObservableObject {
     var apiClient: APIClientProtocol
     @Published var error: ChatError?
     @Published var isLoading: Bool = false
+            
     
     //MARK:- Inits
-    init(apiClient: APIClientProtocol = APIClient()) {
+    init(apiClient: APIClientProtocol = APIClient.shared) {
         self.apiClient = apiClient
     }
 }

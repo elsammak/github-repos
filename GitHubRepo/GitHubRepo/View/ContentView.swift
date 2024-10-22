@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+// Parent view, should contain and manage all subviews
 struct ContentView: View {
 
     var body: some View {
@@ -16,8 +16,6 @@ struct ContentView: View {
       
     }
 }
-
-
 
 #Preview {    
     ContentView()

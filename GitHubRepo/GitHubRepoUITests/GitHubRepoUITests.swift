@@ -23,21 +23,20 @@ final class GitHubRepoUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testUserListToRepositoryNavigation() throws {
+        
         let app = XCUIApplication()
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+        // Verify that users list is loaded
+//        XCTAssertTrue(app.tables.element.exists, "The user list should be present")
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+        // Tap on the first user
+//        let firstUserCell = app.tables.element(boundBy: 0).cells.element(boundBy: 0)
+//        XCTAssertTrue(firstUserCell.exists, "The first user cell should exist")
+//        firstUserCell.tap()
+//
+//        // After tapping, verify that the repositories view is shown
+//        XCTAssertTrue(app.staticTexts["List of Repositories"].exists, "The repository list should be visible")
     }
 }

@@ -12,6 +12,7 @@ struct RepositoriesDetailsView: View {
     var user: UserJSON
     @StateObject var repositoryViewModel = RepositoriesViewModel()
     @ObservedObject var usersViewModel: UsersViewModel
+    @State private var presentAlert = false
     
     var body: some View {
         VStack {
@@ -78,6 +79,12 @@ struct RepositoriesDetailsView: View {
                 await repositoryViewModel.loadRepos(forUser: user.login)
             }
         }
+        .onChange(of: usersViewModel.error?.errorMessage) { _,errorMessage in
+            if errorMessage != nil {
+                self.presentAlert = (errorMessage == nil)
+            }
+        }
+        .showAlert(isPresented: $presentAlert, title: "Error", message: usersViewModel.error?.errorMessage ?? "Unknown Error")
     }
 }
 

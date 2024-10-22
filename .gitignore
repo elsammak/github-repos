@@ -1,1 +1,15 @@
-.env
+# Xcode
+.DS_Store
+build/
+DerivedData/
+xcuserdata/
+*.xcworkspace
+*.xcuserstate
+*.xcscmblueprint
+
+# Temporary files
+*.tmp
+*.swp
+*.lock
+*.mode1v3
+*.pbxuser
